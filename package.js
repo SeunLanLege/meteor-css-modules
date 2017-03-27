@@ -1,9 +1,9 @@
 /* globals Package */
 Package.describe({
-  name: 'nathantreid:css-modules',
+  name: 'seunlanlege:css-modules',
   version: '2.5.3',
   summary: 'CSS modules implementation. CSS for components!',
-  git: 'https://github.com/nathantreid/meteor-css-modules.git',
+  git: 'https://github.com/SeunLanLege/meteor-css-modules.git',
   documentation: 'README.md'
 });
 

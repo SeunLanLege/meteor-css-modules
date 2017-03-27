@@ -3,6 +3,12 @@ import path from 'path';
 import pluginOptions from './options';
 import logger from './logger';
 
+const autoprefixer = require('autoprefixer')({ browsers: ['last 4 versions'] });
+const rucksack = require('rucksack-css');
+const nib = require('nib');
+const yeticss = require('yeticss');
+const poststylus = require('poststylus');
+
 export default class StylusProcessor {
   constructor(pluginOptions) {
     this.fileCache = {};
@@ -10,7 +16,6 @@ export default class StylusProcessor {
     this.pluginOptions = pluginOptions;
     this.stylus = pluginOptions.enableStylusCompilation ? require('stylus') : null;
   }
-
   isRoot(inputFile) {
     const fileOptions = inputFile.getFileOptions();
     if (fileOptions.hasOwnProperty('isImport')) {
@@ -68,12 +73,14 @@ export default class StylusProcessor {
       }
     };
 
-    this.stylus.render(sourceFile.rawContents, options, (err, css) => {
-      if (err) {
-        return future.throw(err);
-      }
-      future.return({ css, sourceMap: this.stylus.sourcemap });
-    });
+    this.stylus
+      .use([poststylus([autoprefixer, rucksack])])
+      .render(sourceFile.rawContents, options, (err, css) => {
+        if (err) {
+          return future.throw(err);
+        }
+        future.return({ css, sourceMap: this.stylus.sourcemap });
+      });
 
     return future.wait();
   }
